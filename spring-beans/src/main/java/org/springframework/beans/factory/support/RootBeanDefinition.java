@@ -244,6 +244,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
+	 * TODO 这里 为什么需要深拷贝
 	 * Create a new RootBeanDefinition as deep copy of the given
 	 * bean definition.
 	 * @param original the original bean definition to copy from

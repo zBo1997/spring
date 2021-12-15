@@ -5,6 +5,9 @@ import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 
+/**
+ * 使用代理类 来生成Bean 对象
+ */
 public class MyMethodInterceptor implements MethodInterceptor {
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {

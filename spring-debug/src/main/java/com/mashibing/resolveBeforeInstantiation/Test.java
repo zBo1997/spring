@@ -3,6 +3,9 @@ package com.mashibing.resolveBeforeInstantiation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * 此时在IOC容器中，
+ */
 public class Test {
 
     public static void main(String[] args) {

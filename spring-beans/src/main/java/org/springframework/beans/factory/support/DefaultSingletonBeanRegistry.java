@@ -327,6 +327,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 返回以给定名称注册的(原始)单例对象，如果尚未注册，则创建并注册一个对象
+	 * singletonFactory 是一个 回调函数 ，这里
 	 *
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
@@ -366,7 +367,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 从单例工厂中获取对象
+					// 从单例工厂中获取对象 （这里 就是去掉用BeanFactory “getObject”）
 					singletonObject = singletonFactory.getObject();
 					// 生成了新的单例对象的标记为true，表示生成了新的单例对象
 					newSingleton = true;
