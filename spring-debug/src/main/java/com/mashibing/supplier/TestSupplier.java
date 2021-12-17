@@ -10,4 +10,5 @@ public class TestSupplier {
         User bean = ac.getBean(User.class);
         System.out.println(bean.getUsername());
     }
+
 }

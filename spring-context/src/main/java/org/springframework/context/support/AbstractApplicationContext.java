@@ -551,6 +551,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+	/**
+	 * Spring容器核心部分 ，这里包括了SpringIOC 的生命周期
+	 * @throws BeansException
+	 * @throws IllegalStateException
+	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
@@ -581,11 +586,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
-				// 调用各种beanFactory处理器
+				// 调用各种beanFactory处理器 [这里执行的BFPP]
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
-				// 注册bean处理器，这里只是注册功能，真正调用的是getBean方法
+				// 注册bean处理器，这里只是注册功能，真正调用的是getBean方法 [这里执行的是 BPP]
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.

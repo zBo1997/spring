@@ -859,6 +859,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
+	 * 注意这里 ，这里通过 {@link AbstractAutowireCapableBeanFactory} 这个类的
+	 * @see 这个 方法#createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
 	 * Return a callback for creating an instance of the bean, if any.
 	 * @since 5.0
 	 */

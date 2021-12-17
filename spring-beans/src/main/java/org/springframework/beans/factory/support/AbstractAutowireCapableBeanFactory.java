@@ -618,6 +618,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// 给BeanPostProcessors一个机会来返回代理来替代真正的实例，
 			// 应用实例化前的前置处理器,用户自定义动态代理的方式，
 			// 针对于当前的被代理类需要经过标准的代理流程来创建对象
+			// 后续doCreateBean就不会执行 ，取决于 之前是否 有BPP 可以执行 ，并且 执行的BPP 中返回了对应的Bean
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -1365,6 +1366,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// 获取类型
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
+					/**
+					 * {@link InstantiationAwareBeanPostProcessor }
+					 * 调用继承此接口的 postProcessBeforeInstantiation
+					 * 的方法
+ 					 */
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
 					if (bean != null) {
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
@@ -1378,7 +1384,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * InstantiationAwareBeanPostProcessor类型的处理器处理，返回的是一个Object对象，也就是说此处可以做代理的事，如果发现有一个处理器返回
+	 * InstantiationAwareBeanPostProcessor类型的处理器处理，返回的是一个Object对象，
+	 * 也就是说此处可以做代理的事，如果发现有一个处理器返回
 	 * 的不是null，就直接返回了
 	 *
 	 * Apply InstantiationAwareBeanPostProcessors to the specified bean definition
@@ -1420,6 +1427,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
 		// 确认需要创建的bean实例的类可以实例化
+		// 获取 Bean 大写Class 名称 准备 实例化Bean对象
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
 		// 确保class不为空，并且访问权限是public

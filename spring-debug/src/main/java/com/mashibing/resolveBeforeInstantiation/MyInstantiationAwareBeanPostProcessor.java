@@ -21,6 +21,7 @@ public class MyInstantiationAwareBeanPostProcessor implements InstantiationAware
             //使用CgLib进行动态代理创建对象
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(beanClass);
+            //执行动态代理地回调
             enhancer.setCallback(new MyMethodInterceptor());
             BeforeInstantiation beforeInstantiation = (BeforeInstantiation) enhancer.create();
             System.out.println("创建代理对象："+beforeInstantiation);

@@ -322,6 +322,18 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// 解析得到的
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
+			/***
+			 * 如果需要的话就对 beanDefinition 进行装饰，那么这句代码的作用就是什么功能呢？
+			 * 这句代码的使用场景如下：
+			 * <bean id="test" class="test.MyClass">
+			 *     <mybean:user username="aaaa"/>
+			 * </bean>
+			 * 当 Spring 中的 bean 使用了默认的标签配置，但是其中的子元素却使用了自定义的配置，这句代码就起作用了，可能会有人会疑问，
+			 * 之前讲过，对 bean 的解析分成两种类型，一种是默认的类型解析，另一种是自定义类型解析，这不正是自定义类型解析吗？为什么会在
+			 * 默认的类型解析中单独的添加一个方法的处理呢，确实，这个问题很让人迷惑，但是，不知道聪明的读者有没有发现，这个自定义类型并不是
+			 * 以 Bean 的形式出现的呢？我们之前讲过两种类型的不同处理只是针对 bean 的，这里我们看到，这个自定义类型其实是属性，好了，我们
+			 * 我们继续分析这个代码
+			 */
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);//包装成一个是实体类，没有意义（暂时理解翻方便后续使用）
 			try {
 				// Register the final decorated instance.
