@@ -1413,16 +1413,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 * doCreateBean方法中的核心，也是 Spring不同阶段 创建Bean的核心
 	 * Create a new instance for the specified bean, using an appropriate instantiation strategy:
 	 * factory method, constructor autowiring, or simple instantiation.
 	 * @param beanName the name of the bean
 	 * @param mbd the bean definition for the bean
 	 * @param args explicit arguments to use for constructor or factory method invocation
 	 * @return a BeanWrapper for the new instance
-	 * @see #obtainFromSupplier
-	 * @see #instantiateUsingFactoryMethod
-	 * @see #autowireConstructor
-	 * @see #instantiateBean
+	 * @see #obtainFromSupplier 通过Supplier 来获取对象
+	 * @see #instantiateUsingFactoryMethod 使用FactoryBean创建对象
+	 * @see #autowireConstructor 自动注入构造构造器
+	 * @see #instantiateBean   正常的反射狗仔Bean对象
 	 */
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
@@ -1641,7 +1642,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper instantiateUsingFactoryMethod(
 			String beanName, RootBeanDefinition mbd, @Nullable Object[] explicitArgs) {
-		//  创建构造器处理器并使用factorymethod进行实例化操作
+		//  创建构造器处理器并使用factorymethod进行实例化操作 春
 		return new ConstructorResolver(this).instantiateUsingFactoryMethod(beanName, mbd, explicitArgs);
 	}
 

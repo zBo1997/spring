@@ -494,6 +494,7 @@ class ConstructorResolver {
 	}
 
 	/**
+	 *
 	 * Instantiate the bean using a named factory method. The method may be static, if the
 	 * bean definition parameter specifies a class, rather than a "factory-bean", or
 	 * an instance variable on a factory object itself configured using Dependency Injection.
@@ -504,7 +505,7 @@ class ConstructorResolver {
 	 * argument values passed in programmatically via the corresponding getBean method.
 	 * @param beanName the name of the bean
 	 * @param mbd the merged bean definition for the bean
-	 * @param explicitArgs argument values passed in programmatically via the getBean
+	 * @param explicitArgs argument values passed in programmatically via the getBean 显示需要调用的参数
 	 * method, or {@code null} if none (-> use constructor argument values from bean definition)
 	 * @return a BeanWrapper for the new instance
 	 */
@@ -521,12 +522,12 @@ class ConstructorResolver {
 		Object factoryBean;
 		// 定义一个用于存放工厂Bean对象的类对象的Class
 		Class<?> factoryClass;
-		// 定义一个表示是静态工厂方法的标记
+		// 定义一个表示是静态工厂方法的标记（区分实例工厂 还是 静态工厂）
 		boolean isStatic;
 
 		// 从mbd中获取配置的FactoryBean名
 		String factoryBeanName = mbd.getFactoryBeanName();
-		// 如果factoryBeanName不为null
+		// 如果factoryBeanName不为null 其中 有 FactoryBeanName的名称
 		if (factoryBeanName != null) {
 			// 如果factoryBean名与beanName相同
 			if (factoryBeanName.equals(beanName)) {
@@ -581,6 +582,7 @@ class ConstructorResolver {
 			Object[] argsToResolve = null;
 			// 使用mbd的构造函数字段通用锁进行加锁，以保证线程安全
 			synchronized (mbd.constructorArgumentLock) {
+
 				// 指定factoryMethodToUser引用mbd已解析的构造函数或工厂方法对象
 				factoryMethodToUse = (Method) mbd.resolvedConstructorOrFactoryMethod;
 				// 如果factoryMethodToUser不为null且mbd已解析构造函数参数
@@ -926,6 +928,7 @@ class ConstructorResolver {
 			// 如果有安全管理器
 			if (System.getSecurityManager() != null) {
 				// 使用特权方式运行：在beanFactory中返回beanName的Bean实例，并通过factoryMethod创建它
+				// 使用BeanFactory
 				return AccessController.doPrivileged((PrivilegedAction<Object>) () ->
 						this.beanFactory.getInstantiationStrategy().instantiate(
 								mbd, beanName, this.beanFactory, factoryBean, factoryMethod, args),
