@@ -113,6 +113,7 @@ class ConstructorResolver {
 
 
 	/**
+	 * 寻找匹配的构造器 进行自动注入
 	 * "autowire constructor" (with constructor arguments by type) behavior.
 	 * Also applied if explicit constructor argument values are specified,
 	 * matching all remaining arguments with beans from the bean factory.
@@ -169,7 +170,7 @@ class ConstructorResolver {
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve, true);
 			}
 		}
-
+		//    所有的构造器               所有的参数
 		//如果constructorToUse为null或者argsToUser为null
 		if (constructorToUse == null || argsToUse == null) {
 			// Take specified constructors, if any.
@@ -240,7 +241,7 @@ class ConstructorResolver {
 			}
 
 			// 对候选的构造函数进行排序，先是访问权限后是参数个数
-			// public权限参数数量由多到少
+			// public权限参数数量由多到少 排序
 			AutowireUtils.sortConstructors(candidates);
 			// 定义一个差异变量，变量的大小决定着构造函数是否能够被使用
 			int minTypeDiffWeight = Integer.MAX_VALUE;
@@ -253,7 +254,7 @@ class ConstructorResolver {
 			for (Constructor<?> candidate : candidates) {
 				// 获取参数的个数
 				int parameterCount = candidate.getParameterCount();
-
+				// 由于前面已经进行按照 参数个数 进行倒序排序 ，所以 不存可用参数就直接跳过对应的循环 减少时间时间复杂度
 				// 如果已经找到选用的构造函数或者需要的参数个数小于当前的构造函数参数个数则终止，前面已经经过了排序操作
 				if (constructorToUse != null && argsToUse != null && argsToUse.length > parameterCount) {
 					// Already found greedy constructor that can be satisfied ->
@@ -1440,6 +1441,7 @@ class ConstructorResolver {
 				// 让mbd的已解析的构造函数或工厂方法【{@link RootBeanDefinition#resolvedConstructorOrFactoryMethod}】引用constructorOrFactoryMethod
 				mbd.resolvedConstructorOrFactoryMethod = constructorOrFactoryMethod;
 				// 将mdb的构造函数参数已解析标记【{@link RootBeanDefinition#constructorArgumentsResolved}】设置为true
+				// 这个标志以后 初始化此对象 以后都有可能 要使用这个 构造方法
 				mbd.constructorArgumentsResolved = true;
 				// 如果resolveNecessary为true，表示参数还需要进一步解析
 				if (this.resolveNecessary) {

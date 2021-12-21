@@ -32,7 +32,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * 简单的对象实例化策略
+ * 简单的对象实例化策略 因为Spring是通过CgLIb 动态动态代理生成的对象
  *
  * Simple object instantiation strategy for use in a BeanFactory.
  *

@@ -1480,11 +1480,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				return instantiateBean(beanName, mbd);
 			}
 		}
-
+		/**
+		 * 无法从 constructorArgumentLock 中获取相应的构造器
+		 */
 		// Candidate constructors for autowiring?
 		// 从bean后置处理器中为自动装配寻找构造方法, 有且仅有一个有参构造或者有且仅有@Autowired注解构造
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
-		// 以下情况符合其一即可进入
+		// 以下情况符合其一即可进入 自动装配类选择（ByName ByType constructor default no 五种自动装配的类型）
 		// 1、存在可选构造方法
 		// 2、自动装配模型为构造函数自动装配
 		// 3、给BeanDefinition中设置了构造参数值
@@ -1495,7 +1497,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Preferred constructors for default construction?
-		// 找出最合适的默认构造方法
+		// 找出最合适的默认构造方法  获取@Primary 注解的构造器
 		ctors = mbd.getPreferredConstructors();
 		if (ctors != null) {
 			// 构造函数自动注入
@@ -1570,7 +1572,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * 确定用于给定bean的候选构造函数，使用bean的后置处理器机制
-	 *
+	 * {@link AutowiredAnnotationBeanPostProcessor} 调用
 	 * Determine candidate constructors to use for the given bean, checking all registered
 	 * {@link SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessors}.
 	 * @param beanClass the raw class of the bean
@@ -1578,6 +1580,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @return the candidate constructors, or {@code null} if none specified
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor#determineCandidateConstructors
+	 *
 	 */
 	@Nullable
 	protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable Class<?> beanClass, String beanName)
@@ -1599,6 +1602,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 * 实例化方法
 	 * Instantiate the given bean using its default constructor.
 	 * @param beanName the name of the bean
 	 * @param mbd the bean definition for the bean
@@ -1608,6 +1612,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			Object beanInstance;
 			if (System.getSecurityManager() != null) {
+				//通过安全管理框架后  找到一实例化策略 默认是为Cglib
 				beanInstance = AccessController.doPrivileged(
 						(PrivilegedAction<Object>) () -> getInstantiationStrategy().instantiate(mbd, beanName, this),
 						getAccessControlContext());
@@ -1616,7 +1621,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// 获取实例化策略并且进行实例化操作
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, this);
 			}
-			// 包装成BeanWrapper
+			// 包装成BeanWrapper 的作用方便后续做 类型转换
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			initBeanWrapper(bw);
 			return bw;
@@ -1642,7 +1647,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper instantiateUsingFactoryMethod(
 			String beanName, RootBeanDefinition mbd, @Nullable Object[] explicitArgs) {
-		//  创建构造器处理器并使用factorymethod进行实例化操作 春
+		//  创建构造器处理器并使用factorymethod进行实例化操作
 		return new ConstructorResolver(this).instantiateUsingFactoryMethod(beanName, mbd, explicitArgs);
 	}
 

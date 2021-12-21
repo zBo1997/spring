@@ -80,11 +80,13 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 
 
 	// 子类重写SimpleInstantiationStrategy中的instantiateWithMethodInjection方法
+	// 无参构造
 	@Override
 	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
 		return instantiateWithMethodInjection(bd, beanName, owner, null);
 	}
 
+	// 有参 构造  并且 传递对应的 参数
 	@Override
 	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
 			@Nullable Constructor<?> ctor, Object... args) {
@@ -179,6 +181,19 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 
 
 	/**
+	 * 这里貌似是Spring为了解决 CGLIB {@link CallbackFilter} 这个类接口 导致的
+	 * 原因就是cglib自身的内部代理类缓存，将CallbackFilter对象加入到了缓存中，以至于该对象很大、并发量很大时，会造成内存溢出的Bug。
+	 * Spring AOP 核心中有 此类 {@link AbstractClassGenerator} 此类为
+	 * cglib包下的{@link AbstractClassGenerator}源码,生成代理的Enhancer或者BeanGenerator都集成自此类。
+	 * cglib创建代理类的时候会根据target类的相关信息去计算一个key值，
+	 * 通过这个key去缓存里面查找以前是否生成过同样的代理，如果存在就不会重新生成，直接使用缓存，
+	 * 如果不存在就重新创建一个新的代理类，并放入到缓存中
+	 *
+	 * 解决方法应该就是
+	 * 1.重写{@link CglibIdentitySupport}类的equals和hashCode方法，
+	 * 这样，当MyFilter对象准备进入缓存时，cglib会判断是否为不同的 MethodOverrideCallbackFilter 对象，如果是才加入到缓存。
+	 * 我们重写了equals和hashCode后，让cglib认为这些MyFilter对象都是相同的。
+	 *
 	 * Class providing hashCode and equals methods required by CGLIB to
 	 * ensure that CGLIB doesn't generate a distinct class per bean.
 	 * Identity is based on class and bean definition.

@@ -23,7 +23,6 @@ import org.springframework.lang.Nullable;
 
 /**
  * 继承自InstantiationAwareBeanPostProcessor接口，增加了三个额外处理的方法，由spring内部使用
- *
  * Extension of the {@link InstantiationAwareBeanPostProcessor} interface,
  * adding a callback for predicting the eventual type of a processed bean.
  *
