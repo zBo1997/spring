@@ -79,7 +79,7 @@ import org.springframework.util.ClassUtils;
 
 /**
  * PropertyEditorRegistry接口的基本实现，对默认的编辑器或者自定义编辑器提供管理功能
- *
+ *1
  * Base implementation of the {@link PropertyEditorRegistry} interface.
  * Provides management of default editors and custom editors.
  * Mainly serves as base class for {@link BeanWrapperImpl}.

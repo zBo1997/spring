@@ -1621,7 +1621,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// 获取实例化策略并且进行实例化操作
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, this);
 			}
-			// 包装成BeanWrapper 的作用方便后续做 类型转换
+			// 包装成BeanWrapper 的作用方便后续做 类型转换 【这个构造方法构造一系列，Converter 和 PropertyEditor 】
+			//便于我们在
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			initBeanWrapper(bw);
 			return bw;
