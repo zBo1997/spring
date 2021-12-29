@@ -24,6 +24,13 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ *    两个不同的类 实现了不同的对象构造方法，
+ *         SimpleStrategy   -------->  CglibSubClassingInstationStrategy
+ *             /  |  \                                 |
+ *          /    |    \                          动态代理对象
+ *         /     |     \                        /           \
+ *     无参   有参    工厂   ==>#instantiate 有参         无参数    ==>#instantiateWithMethodInjection
+ *
  * 实例化策略接口，子类被用来根据rootBeanDefinition来创建实例对象
  *
  * Interface responsible for creating instances corresponding to a root bean definition.

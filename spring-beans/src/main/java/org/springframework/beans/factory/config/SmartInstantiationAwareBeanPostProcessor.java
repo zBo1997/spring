@@ -55,7 +55,7 @@ public interface SmartInstantiationAwareBeanPostProcessor extends InstantiationA
 	}
 
 	/**
-	 * 完成对构造函数的解析和推断
+	 * 完成对构造函数的解析和推断 决定候选的构造器 默认方法
 	 *
 	 * Determine the candidate constructors to use for the given bean.
 	 * <p>The default implementation returns {@code null}.

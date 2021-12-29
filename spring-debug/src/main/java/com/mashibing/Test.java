@@ -25,7 +25,7 @@ public class Test {
 ////        System.out.println(bean);
 ////        A bean1 = ac.getBean(A.class);
 ////        System.out.println(bean1);
-////        ac.close();
+////        ac.close();//管理容器关闭，调用系列bena的deatory方法
 ////        User user = (User) ac.getBean("msb");
 ////        System.out.println(user.getUsername());
 //

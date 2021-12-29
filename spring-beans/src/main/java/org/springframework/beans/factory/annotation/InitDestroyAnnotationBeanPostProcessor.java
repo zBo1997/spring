@@ -207,8 +207,15 @@ public class InitDestroyAnnotationBeanPostProcessor
 		return findLifecycleMetadata(bean.getClass()).hasDestroyMethods();
 	}
 
-
+	/**
+	 * 寻找元数据的相关信息
+	 * 当先对象创建好了  我的初始化方法和销毁方法
+	 * 在XML 配置文件叫 init-method -- bean初始化方法 和 destory-mehtod  -- bean销毁方法
+	 * @param clazz
+	 * @return
+	 */
 	private LifecycleMetadata findLifecycleMetadata(Class<?> clazz) {
+		//如果没有 缓存池中没有相关是数据重新初始化
 		if (this.lifecycleMetadataCache == null) {
 			// Happens after deserialization, during destruction...
 			// 在bean销毁过程中，反序列化后调用
@@ -246,9 +253,9 @@ public class InitDestroyAnnotationBeanPostProcessor
 			return this.emptyLifecycleMetadata;
 		}
 
-		// 实例化后的回调方法（@PostConstruct）
+		// 实例化后的回调方法（@PostConstruct）注解原理
 		List<LifecycleElement> initMethods = new ArrayList<>();
-		// 销毁前的回调方法（@PreDestroy）
+		// 销毁前的回调方法（@PreDestroy）注解原理
 		List<LifecycleElement> destroyMethods = new ArrayList<>();
 		// 获取正在处理的目标类
 		Class<?> targetClass = clazz;
@@ -309,6 +316,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 
 	/**
+	 * 一个类的生命周期元数据
 	 * Class representing information about annotated init and destroy methods.
 	 */
 	private class LifecycleMetadata {
