@@ -54,7 +54,11 @@ final class PostProcessorRegistrationDelegate {
     private PostProcessorRegistrationDelegate() {
     }
 
-
+    /**
+     * 这里执行了BeanDefinitionRegistry
+     * @param beanFactory
+     * @param beanFactoryPostProcessors
+     */
     public static void invokeBeanFactoryPostProcessors(
             ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 

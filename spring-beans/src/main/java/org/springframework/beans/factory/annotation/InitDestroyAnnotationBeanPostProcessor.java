@@ -166,6 +166,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
 		try {
+			//@PostContructor 的相关方法也就是
 			metadata.invokeInitMethods(bean, beanName);
 		}
 		catch (InvocationTargetException ex) {
@@ -185,6 +186,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 	@Override
 	public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
+		//执行@DestroyAnnotation Bean销毁前的相关方法
 		try {
 			metadata.invokeDestroyMethods(bean, beanName);
 		}
@@ -285,7 +287,6 @@ public class InitDestroyAnnotationBeanPostProcessor
 					}
 				}
 			});
-
 			// 将本次循环中获取到的对应方法集合保存到总集合中
 			initMethods.addAll(0, currInitMethods);
 			// 销毁方法父类晚于子类
@@ -293,6 +294,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 			// 获取当前类的父类
 			targetClass = targetClass.getSuperclass();
 		}
+		// 一致遍历到父类
 		// 如果当前类存在父类且父类不为object基类则循环对父类进行处理
 		while (targetClass != null && targetClass != Object.class);
 
@@ -350,7 +352,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 			for (LifecycleElement element : this.initMethods) {
 				String methodIdentifier = element.getIdentifier();
 				if (!beanDefinition.isExternallyManagedInitMethod(methodIdentifier)) {
-					// 注册初始化调用方法
+					// 注册初始化调用方法 这里往RootBeanDefinition 注册
 					beanDefinition.registerExternallyManagedInitMethod(methodIdentifier);
 					checkedInitMethods.add(element);
 					if (logger.isTraceEnabled()) {

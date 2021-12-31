@@ -75,12 +75,14 @@ public class AnnotatedBeanDefinitionReader {
 	}
 
 	/**
+	 * 注意这个构造方法 这个构造方法会初始化 registerAnnotationConfigProcessors
 	 * Create a new {@code AnnotatedBeanDefinitionReader} for the given registry,
 	 * using the given {@link Environment}.
 	 * @param registry the {@code BeanFactory} to load bean definitions into,
 	 * in the form of a {@code BeanDefinitionRegistry}
 	 * @param environment the {@code Environment} to use when evaluating bean definition
 	 * profiles.
+	 *
 	 * @since 3.1
 	 */
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
