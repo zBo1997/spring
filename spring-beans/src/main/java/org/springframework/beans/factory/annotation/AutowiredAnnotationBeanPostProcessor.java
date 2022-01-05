@@ -170,6 +170,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 */
 	@SuppressWarnings("unchecked")
 	public AutowiredAnnotationBeanPostProcessor() {
+		/**
+		 * 添加三个默认的
+		 */
 		this.autowiredAnnotationTypes.add(Autowired.class);
 		this.autowiredAnnotationTypes.add(Value.class);
 		try {
@@ -266,7 +269,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		// 解析注解并缓存
-		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
+		InjectionMetadata metadata =  findAutowiringMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
 
@@ -515,7 +518,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 */
 	public void processInjection(Object bean) throws BeanCreationException {
 		Class<?> clazz = bean.getClass();
-		InjectionMetadata metadata = findAutowiringMetadata(clazz.getName(), clazz, null);
+		InjectionMetadata metadata = findAutowirFingMetadata(clazz.getName(), clazz, null);
 		try {
 			metadata.inject(bean, null, null);
 		}
@@ -731,6 +734,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 
 	/**
+	 * 属性元素装配
 	 * Class representing injection information about an annotated field.
 	 */
 	private class AutowiredFieldElement extends InjectionMetadata.InjectedElement {
@@ -808,6 +812,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					}
 				}
 			}
+			/**
+			 * 这里可能会有问题
+			 */
 			if (value != null) {
 				// 通过反射，给属性赋值
 				ReflectionUtils.makeAccessible(field);

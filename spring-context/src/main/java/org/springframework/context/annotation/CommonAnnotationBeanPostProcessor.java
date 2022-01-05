@@ -206,8 +206,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	 */
 	public CommonAnnotationBeanPostProcessor() {
 		setOrder(Ordered.LOWEST_PRECEDENCE - 3);
-		setInitAnnotationType(PostConstruct.class);
-		setDestroyAnnotationType(PreDestroy.class);
+		setInitAnnotationType(PostConstruct.class);//这里指定了对应的注解类型，在父类中使用到了
+		setDestroyAnnotationType(PreDestroy.class);//这里指定了对应的注解类型，在父类中使用到了
 		ignoreResourceType("javax.xml.ws.WebServiceContext");
 	}
 
@@ -301,7 +301,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-		// 处理@PostConstruct和@PreDestroy注解
+		// 父类 处理@PostConstruct和@PreDestroy注解
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
 		//找出beanType所有被@Resource标记的字段和方法封装到InjectionMetadata中
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
@@ -394,7 +394,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	}
 
 	private InjectionMetadata buildResourceMetadata(final Class<?> clazz) {
-		// 判断当前clazz是否是候选class
+		// 判断当前clazz是否是候选class 这里校验了类型
 		if (!AnnotationUtils.isCandidateClass(clazz, resourceAnnotationTypes)) {
 			return InjectionMetadata.EMPTY;
 		}
