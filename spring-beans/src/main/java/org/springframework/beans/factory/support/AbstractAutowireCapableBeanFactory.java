@@ -1190,10 +1190,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			// 遍历工厂内的所有后处理器
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
-				// 如果bp是SmartInstantiationAwareBeanPostProcessor实例
+				// 如果bp是SmartInstantiationAwareBeanPostProcessor实例(这里判断是否是 代理对象 )
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
 					// 让exposedObject经过每个SmartInstantiationAwareBeanPostProcessor的包装
+					// 如果是早期代理对象，直接返回
 					exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);
 				}
 			}

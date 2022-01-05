@@ -175,6 +175,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		 */
 		this.autowiredAnnotationTypes.add(Autowired.class);
 		this.autowiredAnnotationTypes.add(Value.class);
+		//@Inject 注解
 		try {
 			this.autowiredAnnotationTypes.add((Class<? extends Annotation>)
 					ClassUtils.forName("javax.inject.Inject", AutowiredAnnotationBeanPostProcessor.class.getClassLoader()));
@@ -268,7 +269,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 */
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-		// 解析注解并缓存
+		//解析 @AutoWired 注解
 		InjectionMetadata metadata =  findAutowiringMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -779,6 +780,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				try {
 					// 获取依赖的value值的工作  最终还是委托给beanFactory.resolveDependency()去完成的
 					// 这个接口方法由AutowireCapableBeanFactory提供，它提供了从bean工厂里获取依赖值的能力
+					// 这里解决了@Depend 注解 ，在 {@link DefaultListableBeanFactory} 这个类中
 					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 				}
 				catch (BeansException ex) {
@@ -813,7 +815,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				}
 			}
 			/**
-			 * 这里可能会有问题
+			 * 这里可能会有问题,
 			 */
 			if (value != null) {
 				// 通过反射，给属性赋值
