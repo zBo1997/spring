@@ -2203,7 +2203,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				scope = getRegisteredScope(scopeName);
 			}
 		}
-		// 评估value作为表达式（如果适用）；否则按原样返回值
+		// 评估value作为表达式（如果适用）；否则按原样返回值【这里解析了SPEL】
 		return this.beanExpressionResolver.evaluate(value, new BeanExpressionContext(this, scope));
 	}
 

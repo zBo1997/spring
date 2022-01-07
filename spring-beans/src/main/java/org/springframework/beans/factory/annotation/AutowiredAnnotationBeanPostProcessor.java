@@ -780,13 +780,13 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				try {
 					// 获取依赖的value值的工作  最终还是委托给beanFactory.resolveDependency()去完成的
 					// 这个接口方法由AutowireCapableBeanFactory提供，它提供了从bean工厂里获取依赖值的能力
-					// 这里解决了@Depend 注解 ，在 {@link DefaultListableBeanFactory} 这个类中
+					// {@link DefaultListableBeanFactory} 这个类中
 					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 				}
 				catch (BeansException ex) {
 					throw new UnsatisfiedDependencyException(null, beanName, new InjectionPoint(field), ex);
 				}
-				// 把缓存值缓存起来
+				// 把缓存值缓存起来 【把创建号的对象放到缓存中】
 				synchronized (this) {
 					// 如果没有缓存，则开始缓存
 					if (!this.cached) {
@@ -815,7 +815,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				}
 			}
 			/**
-			 * 这里可能会有问题,
+			 * 这里把当前创建好的属性通过反射注入到需要当前对象的属性中去
 			 */
 			if (value != null) {
 				// 通过反射，给属性赋值

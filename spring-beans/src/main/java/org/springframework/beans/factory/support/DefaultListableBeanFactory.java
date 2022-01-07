@@ -1495,7 +1495,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			//如果instanceCandidate是Class实例
 			if (instanceCandidate instanceof Class) {
-				//让instanceCandidate引用 descriptor对autowiredBeanName解析为该工厂的Bean实例
+				//让instanceCandidate引用 descriptor对autowiredBeanName解析为该工厂的Bean实例 【这里顺便创建了对象的，然后获取到了当前对象需要的对象实列】
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
 			//定义一个result变量，用于存储最佳候选Bean对象

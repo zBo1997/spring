@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <!--给复杂类型的赋值都在property标签内进行-->
-    <bean id="person" class="com.mashibing.populateBean.Person">
+    <bean id="person" class="com.mashibing.populateBean.Person" autowire="byType">
         <property name="name">
             <!--赋空值-->
             <null></null>

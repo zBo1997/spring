@@ -43,8 +43,8 @@ public class Test {
 ////        ac.close();
 ////        Person person2 = ac.getBean("person", Person.class);
 //
-////        ApplicationContext ac = new ClassPathXmlApplicationContext("person.xml");
-////        Person bean = ac.getBean(Person.class);
+//            ApplicationContext ac = new ClassPathXmlApplicationContext("person.xml");
+////        Person bean = ac.getBean(Per son.class);
 ////        Person bean2 = ac.getBean(Person.class);
 //
 ////        System.out.println(System.getProperties());
@@ -57,10 +57,10 @@ public class Test {
         // 所有的对象必须只有一个，单例对象
 //        A a = new A();
 //        B b = new B();
-
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("test.xml");
-        Student bean = context.getBean(Student.class);
-        context.close();
+//
+//        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("test.xml");
+//        Student bean = context.getBean(Student.class);
+//        context.close();
 
         //想通过student获取其他bean对象怎么办？
 

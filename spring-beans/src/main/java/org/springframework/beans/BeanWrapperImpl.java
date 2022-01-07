@@ -312,6 +312,11 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 			}
 		}
 
+		/**
+		 * beanWrapperImpl 中的 通过反射调用当前的属性的setter 方法进行属性的注入操作
+		 * @param value
+		 * @throws Exception
+		 */
 		@Override
 		public void setValue(@Nullable Object value) throws Exception {
 			Method writeMethod = (this.pd instanceof GenericTypeAwarePropertyDescriptor ?
@@ -331,8 +336,8 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 				}
 			}
 			else {
-				ReflectionUtils.makeAccessible(writeMethod);
-				writeMethod.invoke(getWrappedInstance(), value);
+				ReflectionUtils.makeAccessible(writeMethod);//通过反射方式设置访问权限
+				writeMethod.invoke(getWrappedInstance(), value);//开始进行设置
 			}
 		}
 	}
