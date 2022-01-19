@@ -408,6 +408,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				}
 				// 生成了新的单例对象
 				if (newSingleton) {
+					// 若newSingleton 为true 则添加到以及缓存中去
 					// 将beanName和singletonObject的映射关系添加到该工厂的单例缓存中:
 					addSingleton(beanName, singletonObject);
 				}

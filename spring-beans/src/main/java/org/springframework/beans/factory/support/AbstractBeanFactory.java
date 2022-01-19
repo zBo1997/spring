@@ -325,7 +325,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
-			// 返回对象的实例，很多同学会理解不了这句话存在的意义，当你实现了FactoryBean接口的对象，需要获取具体的对象的时候就需要此方法来进行获取了
+			// 返回对象的实例，很多同学会理解不了这句话存在的意义，
+			// 当你实现了FactoryBean接口的对象，需要获取具体的对象的时候就需要此方法来进行获取了
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -406,7 +407,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						}
 					}
 				}
-
+				/**
+				 * 通过这里发现 Spring的 原型模式 就是通过缓存的方式实现的，单例默认从缓存中取出对象，
+				 * 多例对象不会被缓存，所以原型模式的对象，每次都会创建得新的对象
+				 */
 				// Create bean instance.
 				// 创建bean的实例对象
 				if (mbd.isSingleton()) {

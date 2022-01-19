@@ -88,7 +88,7 @@ import org.springframework.lang.Nullable;
  * <li>a custom init-method definition
  * <li>{@code postProcessAfterInitialization} methods of BeanPostProcessors
  * </ol>
- *
+ * //Bean销毁 相关解释，这里解释Bean的就是也使用了的 BPP来实现的
  * <p>On shutdown of a bean factory, the following lifecycle methods apply:
  * <ol>
  * <li>{@code postProcessBeforeDestruction} methods of DestructionAwareBeanPostProcessors

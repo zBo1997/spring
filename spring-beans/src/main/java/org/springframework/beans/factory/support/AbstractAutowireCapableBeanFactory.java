@@ -1725,7 +1725,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 		//PropertyValues：包含以一个或多个PropertyValue对象的容器，通常包括针对特定目标Bean的一次更新
-		//如果mdb有PropertyValues就获取其PropertyValues
+		//如果mbd有PropertyValues就获取其PropertyValues
  		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
 		// 获取 mbd 的 自动装配模式
