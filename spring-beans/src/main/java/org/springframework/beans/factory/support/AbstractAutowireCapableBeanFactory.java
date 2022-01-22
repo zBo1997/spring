@@ -716,20 +716,24 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
+			/**
+			 * 这里去存放三级缓存了
+			 */
 			// 为避免后期循环依赖，可以在bean初始化完成前将创建实例的ObjectFactory加入工厂
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 
-			//只保留二级缓存，不向三级缓存中存放对象
-			earlySingletonObjects.put(beanName,bean);
-			registeredSingletons.add(beanName);
-//
-//			synchronized (this.singletonObjects) {
-//				if (!this.singletonObjects.containsKey(beanName)) {
-//					//实例化后的对象先添加到三级缓存中，三级缓存对应beanName的是一个lambda表达式(能够触发创建代理对象的机制)
-//					this.singletonFactories.put(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
-//					this.registeredSingletons.add(beanName);
-//				}
-//			}
+			////只保留二级缓存，不向三级缓存中存放对象
+			//earlySingletonObjects.put(beanName,bean);
+			//registeredSingletons.add(beanName);
+
+
+			synchronized (this.singletonObjects) {
+				if (!this.singletonObjects.containsKey(beanName)) {
+					//实例化后的对象先添加到三级缓存中，三级缓存对应beanName的是一个lambda表达式(能够触发创建代理对象的机制)
+					this.singletonFactories.put(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
+					this.registeredSingletons.add(beanName);
+				}
+			}
 
 		}
 
@@ -757,7 +761,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			Object earlySingletonReference = getSingleton(beanName, false);
 			// earlySingletonReference只有在检测到有循环依赖的情况下才会不为空
 			if (earlySingletonReference != null) {
-				// 如果exposedObject没有在初始化方法中被改变，也就是没有被增强
+				// 如果exposedObject没有在初始化方法中被改变，也就是没有被动态代理增强过
 				if (exposedObject == bean) {
 					exposedObject = earlySingletonReference;
 				}
@@ -1190,7 +1194,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			// 遍历工厂内的所有后处理器
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
-				// 如果bp是SmartInstantiationAwareBeanPostProcessor实例(这里判断是否是 代理对象 )
+				/**
+				 * 如果bp是SmartInstantiationAwareBeanPostProcessor实例(这里判断是否是 代理对象)
+				 * 如果是代理对象 那么 就会把原始对象设置成代理对象
+ 				 */
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
 					// 让exposedObject经过每个SmartInstantiationAwareBeanPostProcessor的包装

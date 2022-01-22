@@ -228,6 +228,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				// 将beanName,singletonFactory放到单例工厂的缓存【bean名称 - ObjectFactory】
 				this.singletonFactories.put(beanName, singletonFactory);
 				// 从早期单例对象的高速缓存【bean名称-bean实例】 移除beanName的相关缓存对象
+				// 这里为什么要删除耳机缓存，目前认为可能是是为了
 				this.earlySingletonObjects.remove(beanName);
 				// 将beanName添加已注册的单例集中
 				this.registeredSingletons.add(beanName);
@@ -264,7 +265,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Object singletonObject = this.singletonObjects.get(beanName);
 		// 如果单例对象缓存中没有，并且该beanName对应的单例bean正在创建中
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			//从早期单例对象缓存中获取单例对象（之所称成为早期单例对象，是因为earlySingletonObjects里
+			// 从早期单例对象缓存中获取单例对象（之所称成为早期单例对象，是因为earlySingletonObjects里
 			// 的对象的都是通过提前曝光的ObjectFactory创建出来的，还未进行属性填充等操作）
 			singletonObject = this.earlySingletonObjects.get(beanName);
 			// 如果在早期单例对象缓存中也没有，并且允许创建早期单例对象引用
@@ -294,6 +295,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		return singletonObject;
 	}
 
+//	/**
+//	 * 去掉三级三级缓存啊的的代码
+//	 * @param beanName
+//	 * @param allowEarlyReference
+//	 * @return
+//	 */
 //   @Nullable
 //   protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 //   	Object singletonObject = this.singletonObjects.get(beanName);
