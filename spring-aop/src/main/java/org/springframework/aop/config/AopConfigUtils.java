@@ -58,6 +58,9 @@ public abstract class AopConfigUtils {
 	 */
 	private static final List<Class<?>> APC_PRIORITY_LIST = new ArrayList<>(3);
 
+	/**
+	 * 注册对应的代理创建器
+	 */
 	static {
 		// Set up the escalation list...
 		APC_PRIORITY_LIST.add(InfrastructureAdvisorAutoProxyCreator.class);
@@ -83,18 +86,36 @@ public abstract class AopConfigUtils {
 		return registerAspectJAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+	/**
+	 * XML 的创建器
+	 * @param registry
+	 * @param source
+	 * @return
+	 */
 	@Nullable
 	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
-
+		// 注意这 默认使用的是 AspectJAwareAdvisorAutoProxyCreator.class 的代理创建器，
+		// Spring为我们准备了 三个 APC_PRIORITY_LIST 在这集合中
 		return registerOrEscalateApcAsRequired(AspectJAwareAdvisorAutoProxyCreator.class, registry, source);
 	}
 
+	/**
+	 *
+	 * @param registry
+	 * @return
+	 */
 	@Nullable
 	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry) {
 		return registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+	/**
+	 * 注解的形式 AOP 代理创建器
+	 * @param registry
+	 * @param source
+	 * @return
+	 */
 	@Nullable
 	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 			BeanDefinitionRegistry registry, @Nullable Object source) {

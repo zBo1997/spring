@@ -39,7 +39,7 @@ public class CompositeComponentDefinition extends AbstractComponentDefinition {
 
 	@Nullable
 	private final Object source;
-
+	//符合的组件定义类
 	private final List<ComponentDefinition> nestedComponents = new ArrayList<>();
 
 

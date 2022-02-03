@@ -98,11 +98,20 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	private ParseState parseState = new ParseState();
 
 
+	/**
+	 * XML 解析 Aop的配置解析核心
+	 * @param element the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}
+	 * @param parserContext the object encapsulating the current state of the parsing process;
+	 * provides access to a {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
+	 * @return
+	 */
 	@Override
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		//获取当前元素的名称
 		CompositeComponentDefinition compositeDef =
 				new CompositeComponentDefinition(element.getTagName(), parserContext.extractSource(element));
+		//放入解析队列 ，准备按照队列顺序进行解析
 		parserContext.pushContainingComponent(compositeDef);
 		// 注册自动代理模式创建器,AspectjAwareAdvisorAutoProxyCreator
 		configureAutoProxyCreator(parserContext, element);
