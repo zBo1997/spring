@@ -232,11 +232,11 @@ class ConstructorResolver {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
-				// 提取配置文件中的配置的构造函数参数
+				// 提取配置文件中的配置的构造函数参数【类型】
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				// 用于承载解析后的构造函数参数的值
 				resolvedValues = new ConstructorArgumentValues();
-				// 能解析到的参数个数
+				// 能解析到的参数个数 ***这里非常重要*** 这里解析了当前最少的有参构造器
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 
