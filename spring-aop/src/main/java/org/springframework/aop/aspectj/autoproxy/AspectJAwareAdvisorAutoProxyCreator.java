@@ -99,7 +99,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 	}
 
 	/**
-	 * 找出Aspect切面和解析通知器的方法，通知器Advisor里面有通知Advice实例
+	 * 找出Aspectj切面和解析通知器的方法，通知器Advisor里面有通知Advice实例
 	 * @param beanClass the class of the bean
 	 * @param beanName the name of the bean
 	 * @return

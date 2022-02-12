@@ -265,7 +265,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
-			//这里判断是否是一个 “基础设施类” 查看是否是
+			//这里判断是否是一个 “基础设施类” 查看是否是Aop的接触设施
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				// 要跳过的直接设置FALSE
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);

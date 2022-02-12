@@ -95,7 +95,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	/**
 	 * 找到所有符合条件的通知对于自动代理的类
-	 *
+	 * Aop所有通知其的创建开始点，从这里开始更具advisor创建advice的一系列流程
 	 * Find all eligible Advisors for auto-proxying this class.
 	 * @param beanClass the clazz to find advisors for
 	 * @param beanName the name of the currently proxied bean
