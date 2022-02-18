@@ -97,7 +97,7 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 
 	/**
 	 * 判断接口是不是需要设置ProxyTargetClass=true，判断它的接口不是内部的回调接口和内部语言接口，就添加接口否则就设置ProxyTargetClass=true
-	 *
+	 * 判断是否使用CGLIB
 	 * Check the interfaces on the given bean class and apply them to the {@link ProxyFactory},
 	 * if appropriate.
 	 * <p>Calls {@link #isConfigurationCallbackInterface} and {@link #isInternalLanguageInterface}

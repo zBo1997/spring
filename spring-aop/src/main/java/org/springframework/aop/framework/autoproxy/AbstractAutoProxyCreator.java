@@ -352,8 +352,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * 先判断是否已经处理过，是否需要跳过，跳过的话直接就放进advisedBeans里，表示不进行代理，如果这个bean处理过了，获取通知拦截器，然后开始进行代理
-	 *
+	 * 先判断是否已经处理过，是否需要跳过，跳过的话直接就放进advisedBeans里，
+	 * 表示不进行代理，如果这个bean处理过了，获取通知拦截器，然后开始进行代理
+	 * 这个方法三级缓存 和 创建代理都使用了这个方法
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
 	 * @param bean the raw bean instance
 	 * @param beanName the name of the bean
@@ -376,7 +377,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
 		}
-
+		/**
+		 * 开始代理对象替换过程
+		 */
 		// Create proxy if we have advice.
 		// 获取当前bean的Advices和Advisors
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
