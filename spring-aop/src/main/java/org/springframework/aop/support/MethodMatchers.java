@@ -94,6 +94,7 @@ public abstract class MethodMatchers {
 	 */
 	public static boolean matches(MethodMatcher mm, Method method, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(mm, "MethodMatcher must not be null");
+		//是否是IntroductionAwareMethodMatcher 不是的话
 		return (mm instanceof IntroductionAwareMethodMatcher ?
 				((IntroductionAwareMethodMatcher) mm).matches(method, targetClass, hasIntroductions) :
 				mm.matches(method, targetClass));
@@ -346,6 +347,8 @@ public abstract class MethodMatchers {
 
 		@Override
 		public boolean matches(Method method, Class<?> targetClass, boolean hasIntroductions) {
+			//其中MethodMatcher1 检查当前Advisor名称是否一样
+			//其中MethodMatcher2 检查
 			return (MethodMatchers.matches(this.mm1, method, targetClass, hasIntroductions) &&
 					MethodMatchers.matches(this.mm2, method, targetClass, hasIntroductions));
 		}

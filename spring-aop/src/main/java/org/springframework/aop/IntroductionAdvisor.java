@@ -19,6 +19,7 @@ package org.springframework.aop;
 /**
  * advisors的超接口，用来执行一个或者多个 introductions类型的aop
  *
+ * 这种类型的Advisor是一种类级别的 Advisor,这是目前不同于pointCutAdvisor //TODO 后续还学要学习
  * Superinterface for advisors that perform one or more AOP <b>introductions</b>.
  *
  * <p>This interface cannot be implemented directly; subinterfaces must
