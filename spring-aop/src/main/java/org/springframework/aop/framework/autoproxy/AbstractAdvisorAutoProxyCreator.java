@@ -103,7 +103,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @return the empty List, not {@code null},
 	 * if there are no pointcuts or interceptors
 	 * @see #findCandidateAdvisors
-	 * @see #sortAdvisors
+	 * @see #sortAdvisors 拓扑排序 //FIXME 这里没了解
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
@@ -113,7 +113,9 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
 		// 提供的hook方法，用于对目标Advisor进行扩展
 		/**
-		 * 这里为什么要拓展，这列Spinrg添加了一个{@link ExposeInvocationInterceptor} 中有ThreadLocal 方便在所有的Advisor中获取 MethodInvocation
+		 *
+		 * 这里为什么要拓展？ 由于Spring中的所有的Aop切面是通过 @After @Before .... 是一个“链”的模式进行执行的。所以需要拓展，进
+		 * 而Spring添加了一个{@link ExposeInvocationInterceptor} 中有ThreadLocal 方便在所有的Advisor中获取 MethodInvocation
 		 */
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {

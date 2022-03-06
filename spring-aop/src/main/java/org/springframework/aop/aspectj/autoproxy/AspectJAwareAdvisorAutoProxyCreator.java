@@ -70,6 +70,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 	 */
 	@Override
 	protected List<Advisor> sortAdvisors(List<Advisor> advisors) {
+		//先创建一个List
 		List<PartiallyComparableAdvisorHolder> partiallyComparableAdvisors = new ArrayList<>(advisors.size());
 		for (Advisor advisor : advisors) {
 			partiallyComparableAdvisors.add(
@@ -120,6 +121,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 	/**
 	 * Implements AspectJ's {@link PartialComparable} interface for defining partial orderings.
+	 * 这里使用了一个拓扑排序，
 	 */
 	private static class PartiallyComparableAdvisorHolder implements PartialComparable {
 

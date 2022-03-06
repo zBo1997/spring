@@ -309,12 +309,15 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	// MethodMatcher匹配方法，借助的PointcutExpression和ShadowMatch去匹配的
 	@Override
 	public boolean matches(Method method, Class<?> targetClass, boolean hasIntroductions) {
+		//获取别切面的的表达式
 		obtainPointcutExpression();
+		//获取植入点，这里的ShadowMatch是通过表达构造一个匹配的结果
 		ShadowMatch shadowMatch = getTargetShadowMatch(method, targetClass);
 
 		// Special handling for this, target, @this, @target, @annotation
 		// in Spring - we can optimize since we know we have exactly this class,
 		// and there will never be matching subclass at runtime.
+		// 这里看了是否能总能你匹配到的织入结果
 		if (shadowMatch.alwaysMatches()) {
 			return true;
 		}

@@ -759,6 +759,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 
 	/**
+	 * 一种静态的MethodMatcher
 	 * MethodMatcher that excludes the specified advice method.
 	 * @see AbstractAspectJAdvice#buildSafePointcut()
 	 */

@@ -179,6 +179,14 @@ public abstract class MethodMatchers {
 			super(mm1, mm2);
 		}
 
+		/**
+		 * 两种不同的匹配规则
+		 * @param method the candidate method
+		 * @param targetClass the target class
+		 * @param hasIntroductions {@code true} if the object on whose behalf we are
+		 * asking is the subject on one or more introductions; {@code false} otherwise
+		 * @return
+		 */
 		@Override
 		public boolean matches(Method method, Class<?> targetClass, boolean hasIntroductions) {
 			return (matchesClass1(targetClass) && MethodMatchers.matches(this.mm1, method, targetClass, hasIntroductions)) ||

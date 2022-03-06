@@ -2,6 +2,7 @@ package com.mashibing.proxy.jdk;
 
 public class Test {
     public static void main(String[] args) {
+        //把生成的class文件成到本地
         System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
         Calculator proxy = CalculatorProxy.getProxy(new MyCalculator());
         proxy.add(1,1);
