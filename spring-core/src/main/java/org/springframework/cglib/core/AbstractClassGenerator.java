@@ -95,6 +95,9 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			}
 		};
 
+		/**
+		 * 注意这是一内部类的静态方法，所以我们会先加载他，这是一个函数接口
+		 */
 		private static final Function<AbstractClassGenerator, Object> GET_KEY = new Function<AbstractClassGenerator, Object>() {
 			public Object apply(AbstractClassGenerator gen) {
 				return gen.key;
@@ -109,6 +112,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			// 设置类加载器，弱引用 即在下次垃圾回收时就会进行回收
 			this.classLoader = new WeakReference<ClassLoader>(classLoader);
 			// 新建一个回调函数，这个回调函数的作用在于缓存中没获取到值时，调用传入的生成的生成代理类并返回
+			// 如果你往下看，会发现这是通过异步执行的，这里为什么进行异步执行？//TODO??
 			Function<AbstractClassGenerator, Object> load =
 					new Function<AbstractClassGenerator, Object>() {
 						public Object apply(AbstractClassGenerator gen) {
@@ -116,7 +120,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 							return gen.wrapCachedClass(klass);
 						}
 					};
-			// 为这个ClassLoadData新建一个缓存类
+			// 为这个ClassLoadData新建一个缓存类 一个是 GET_KEY 另外一个是load 也是一个弱引用的对象，是被调用的class,为了准备后续创建对象时候调用
 			generatedClasses = new LoadingCache<AbstractClassGenerator, Object, Object>(GET_KEY, load);
 		}
 
@@ -310,9 +314,11 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 
 	protected Object create(Object key) {
 		try {
-			// 获取到当前生成器的类加载器
+			// 获取到当前生成器的类加载器 AppClassLoader
 			ClassLoader loader = getClassLoader();
-			// 当前类加载器对应的缓存  缓存key为类加载器，缓存的value为ClassLoaderData，可以理解为一个缓存对象，只不过此缓存对象中包含的是具体的业务逻辑处理过程，有两个function的函数式接口，一个是返回gen.key,对应的名称叫GET_KEY,还有一个是为了创建具体的class，名字叫做load
+			// 当前类加载器对应的缓存  缓存key为类加载器，缓存的value为ClassLoaderData，可以理解为一个缓存对象，
+			// 只不过此缓存对象中包含的是具体的业务逻辑处理过程，有两个function的函数式接口，
+			// 一个是返回gen.key,对应的名称叫GET_KEY,还有一个是为了创建具体的class，名字叫做load
 			Map<ClassLoader, ClassLoaderData> cache = CACHE;
 			// 先从缓存中获取下当前类加载器所有加载过的类
 			ClassLoaderData data = cache.get(loader);
@@ -326,17 +332,18 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 						Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<ClassLoader, ClassLoaderData>(cache);
 						// 新建一个当前加载器对应的ClassLoaderData并加到缓存中，但ClassLoaderData中此时还没有数据
 						data = new ClassLoaderData(loader);
-						newCache.put(loader, data);
+						newCache.put(loader, data);//classLoader 和 classLoaderData
 						// 刷新全局缓存
 						CACHE = newCache;
 					}
 				}
 			}
-			// 设置一个全局key
+			// 设置一个全局key 我们需要创建的这个类
 			this.key = key;
 			// 在刚创建的data(ClassLoaderData)中调用get方法 并将当前生成器，
 			// 以及是否使用缓存的标识穿进去 系统参数 System.getProperty("cglib.useCache", "true")
 			// 返回的是生成好的代理类的class信息
+			// 动态的通过当前对象，获取到当前class的类型
 			Object obj = data.get(this, getUseCache());
 			// 如果为class则实例化class并返回我们需要的代理类
 			if (obj instanceof Class) {
@@ -367,8 +374,9 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 						getClassName() + ". It seems that the loader has been expired from a weak reference somehow. " +
 						"Please file an issue at cglib's issue tracker.");
 			}
+			//通过累加器上锁，开始生成当前的代理类
 			synchronized (classLoader) {
-				// 生成代理类名字
+				// 生成代理类名字。就是cglib 格式的代理对象的类名{@link org.springframework.cglib.core.DefaultNamingPolicy}
 				String name = generateClassName(data.getUniqueNamePredicate());
 				// 缓存中存入这个名字
 				data.reserveName(name);
@@ -386,10 +394,11 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 					// ignore
 				}
 			}
-			// 生成字节码
+			// 生成字节码 这里调用的就是 {@link KeyFactory# Generator #的这个类的generate 方法}
 			byte[] b = strategy.generate(this);
 			// 获取到字节码代表的class的名字
 			String className = ClassNameReader.getClassName(new ClassReader(b));
+			//设置当前的代理类的保护作用域
 			ProtectionDomain protectionDomain = getProtectionDomain();
 			synchronized (classLoader) { // just in case
 				// SPRING PATCH BEGIN

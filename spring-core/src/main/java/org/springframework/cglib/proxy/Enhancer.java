@@ -201,6 +201,7 @@ public class Enhancer extends AbstractClassGenerator {
 	/**
 	 * Internal interface, only public due to ClassLoader issues.
 	 */
+	//这个内部接口 是为了claseloader使用的
 	public interface EnhancerKey {
 
 		public Object newInstance(String type,

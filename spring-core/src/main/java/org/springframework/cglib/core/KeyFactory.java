@@ -123,6 +123,7 @@ abstract public class KeyFactory {
 	};
 
 	/**
+	 * 这是一个定制器，帮助我们拓展使用的
 	 * {@link Type#hashCode()} is very expensive as it traverses full descriptor to calculate hash code.
 	 * This customizer uses {@link Type#getSort()} as a hash code.
 	 */
@@ -159,6 +160,7 @@ abstract public class KeyFactory {
 	}
 
 	public static KeyFactory create(Class keyInterface, KeyFactoryCustomizer first, List<KeyFactoryCustomizer> next) {
+		//获取当前的AppClassLoader EnhancerKey 这个了接口
 		return create(keyInterface.getClassLoader(), keyInterface, first, next);
 	}
 
@@ -188,11 +190,14 @@ abstract public class KeyFactory {
 		}
 		// 设置生成器的类加载器
 		gen.setClassLoader(loader);
-		// 生成enhancerKey的代理类
+		// 生成enhancerKey的代理类 注意这里并不是
 		return gen.create();
 	}
 
-
+	/**
+	 * 这个是一个工具类，是为了生成代理类,都继承于 AbstractClassGenerator
+	 * 核心方法 {@link Generator#generateClass}
+	 */
 	public static class Generator extends AbstractClassGenerator {
 
 		private static final Source SOURCE = new Source(KeyFactory.class.getName());
@@ -254,6 +259,12 @@ abstract public class KeyFactory {
 			this.multiplier = multiplier;
 		}
 
+		/**
+		 * 使用创建好的接口，创建一个代理类，这也就是为什么cglib和jdk 二者代理去区别之一，cglib是通过一个自有的一个接口来动态创建其他代理类的、
+		 * 同样这个代理类是可以被cglib通过jvm缓存的，这也是为什么cglib比jdk 快的原因吧
+		 * @param type
+		 * @return
+		 */
 		protected Object firstInstance(Class type) {
 			return ReflectUtils.newInstance(type);
 		}
