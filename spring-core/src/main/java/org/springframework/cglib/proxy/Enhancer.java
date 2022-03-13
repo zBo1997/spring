@@ -526,7 +526,7 @@ public class Enhancer extends AbstractClassGenerator {
 		 * @param argumentTypes constructor argument types
 		 * @param arguments constructor arguments
 		 * @param callbacks callbacks to set for the new instance
-		 * @return newly created proxy
+		 * @return newly created proxy 实际的新的的代理对象
 		 * @see #createUsingReflection(Class)
 		 */
 		public Object newInstance(Class[] argumentTypes, Object[] arguments, Callback[] callbacks) {
@@ -580,8 +580,15 @@ public class Enhancer extends AbstractClassGenerator {
 		return result;
 	}
 
+	/**
+	 * 当真正创建代理对象走的是这个方法，因为在这个{@link Enhancer} 是 {@link AbstractClassGenerator} 子类，所以当我们new一个Enhancer
+	 * 的调用create 其实不走父类的方法
+	 * @param data
+	 * @return
+	 */
 	@Override
 	protected Class generate(ClassLoaderData data) {
+		//检验
 		validate();
 		if (superclass != null) {
 			setNamePrefix(superclass.getName());
@@ -798,9 +805,14 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
+	/**
+	 * 返回实际的实体对象，也就是说此时的入参instance
+	 * @param instance
+	 * @return
+	 */
 	protected Object nextInstance(Object instance) {
 		EnhancerFactoryData data = (EnhancerFactoryData) instance;
-
+		//在createHelp的时候已经设置为false了 ，所以我们在这里不可能为true
 		if (classOnly) {
 			return data.generatedClass;
 		}
@@ -811,9 +823,15 @@ public class Enhancer extends AbstractClassGenerator {
 			argumentTypes = Constants.EMPTY_CLASS_ARRAY;
 			arguments = null;
 		}
+		//实例化正真的代理对象
 		return data.newInstance(argumentTypes, arguments, callbacks);
 	}
 
+	/**
+	 * 包装需要代理对象
+	 * @param klass
+	 * @return
+	 */
 	@Override
 	protected Object wrapCachedClass(Class klass) {
 		Class[] argumentTypes = this.argumentTypes;

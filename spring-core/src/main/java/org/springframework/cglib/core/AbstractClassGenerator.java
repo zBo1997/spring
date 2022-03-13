@@ -349,7 +349,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			if (obj instanceof Class) {
 				return firstInstance((Class) obj);
 			}
-			// 如果不是则说明是实体，则直接执行另一个方法返回实体
+			// 如果不是则说明是实体，则直接执行另一个方法返回实体.这里的obj还不是实际的代理对象，只是代理对象的一些信息
 			return nextInstance(obj);
 		}
 		catch (RuntimeException | Error ex) {
