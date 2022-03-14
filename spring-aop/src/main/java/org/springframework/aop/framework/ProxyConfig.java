@@ -104,6 +104,7 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 是否运行在被创建代理类的时候被阻止创建
 	 * Return whether proxies created by this configuration should be
 	 * prevented from being cast to {@link Advised}.
 	 */

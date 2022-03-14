@@ -102,7 +102,10 @@ class CglibAopProxy implements AopProxy, Serializable {
 	private static final Map<Class<?>, Boolean> validatedClasses = new WeakHashMap<>();
 
 
-	/** The configuration used to configure this proxy. */
+	/**
+	 * 配置我们的代理器
+	 * The configuration used to configure this proxy.
+	 * */
 	protected final AdvisedSupport advised;
 
 	@Nullable

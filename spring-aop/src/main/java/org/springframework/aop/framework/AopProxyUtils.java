@@ -146,6 +146,7 @@ public abstract class AopProxyUtils {
 		boolean addAdvised = !advised.isOpaque() && !advised.isInterfaceProxied(Advised.class);
 		// 是否需要添加 DecoratingProxy接口
 		boolean addDecoratingProxy = (decoratingProxy && !advised.isInterfaceProxied(DecoratingProxy.class));
+		//非用户定义的 接口的总数进行汇总
 		int nonUserIfcCount = 0;
 		// 需要添加SpringProxy接口
 		if (addSpringProxy) {
@@ -159,6 +160,7 @@ public abstract class AopProxyUtils {
 		if (addDecoratingProxy) {
 			nonUserIfcCount++;
 		}
+		//接口的数量，和用户定义的 数量
 		Class<?>[] proxiedInterfaces = new Class<?>[specifiedInterfaces.length + nonUserIfcCount];
 		// 扩展接口数组
 		System.arraycopy(specifiedInterfaces, 0, proxiedInterfaces, 0, specifiedInterfaces.length);

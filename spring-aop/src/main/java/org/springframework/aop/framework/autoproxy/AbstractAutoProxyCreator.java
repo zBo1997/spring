@@ -501,11 +501,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// 决定对于给定的bean是否应该使用targetClass而不是他的接口代理，检查proxyTargetClass设置以及preserverTargetClass属性
 		if (!proxyFactory.isProxyTargetClass()) {
 			// 判断是 使用jdk动态代理 还是cglib代理
+			//这里如果是true 就是使用cglib，否则使用JDK
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
+
 			}
+
 			else {
-				// 添加代理接口
+				// 添加代理接口，这里计算的原因是：看当前这个了的父类 或者父接口
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
