@@ -398,7 +398,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			byte[] b = strategy.generate(this);
 			// 获取到字节码代表的class的名字
 			String className = ClassNameReader.getClassName(new ClassReader(b));
-			//设置当前的代理类的保护作用域
+			// 设置当前的代理类的保护作用域
 			ProtectionDomain protectionDomain = getProtectionDomain();
 			synchronized (classLoader) { // just in case
 				// SPRING PATCH BEGIN

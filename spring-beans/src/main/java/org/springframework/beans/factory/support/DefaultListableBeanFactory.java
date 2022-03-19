@@ -1529,7 +1529,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
-	 * 针对desciptor所包装的对象类型是[stream,数组,Collection类型且对象类型是接口,Map]的情况，进行解析与依赖类型匹配的候选Bean对象，
+	 * 针对desciptor所包装的对象类型是[stream,数组,Collection类型且对象类型是接口,Map]的情况，
+	 * 进行解析与依赖类型匹配的候选Bean对象，
 	 * 并将其封装成相应的依赖类型对象
 	 * @param descriptor
 	 * @param beanName
@@ -1614,7 +1615,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// 返回该候选对象数组
 			return result;
 		}
-		// 如果依赖类型属于Collection类型且依赖类型是否接口
 		else if (Collection.class.isAssignableFrom(type) && type.isInterface()) {
 			// 将descriptor所包装的参数/字段构建出来的ResolvableType对象解析成Collection类型，然后
 			// 解析出其泛型参数的Class对象
@@ -1625,6 +1625,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				return null;
 			}
 			// 查找与valueType匹配的候选bean对象;构建成Map，key=bean名,val=Bean对象
+			// 如果依赖类型属于Collection类型且依赖类型是否接口
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, elementType,
 					new MultiElementDescriptor(descriptor));
 			// 如果没有候选bean对象，
