@@ -676,6 +676,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
+	 * CgLib动态代理Interceptor责任链模式，中的一个
 	 * General purpose AOP callback. Used when the target is dynamic or when the
 	 * proxy is not frozen.
 	 */
@@ -687,6 +688,15 @@ class CglibAopProxy implements AopProxy, Serializable {
 			this.advised = advised;
 		}
 
+		/**
+		 * 具体拦截器方法
+		 * @param proxy
+		 * @param method
+		 * @param args
+		 * @param methodProxy
+		 * @return
+		 * @throws Throwable
+		 */
 		@Override
 		@Nullable
 		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -776,6 +786,11 @@ class CglibAopProxy implements AopProxy, Serializable {
 					methodProxy : null);
 		}
 
+		/**
+		 * 这列每次使用的都是父类的 proceed();
+		 * @return
+		 * @throws Throwable
+		 */
 		@Override
 		@Nullable
 		public Object proceed() throws Throwable {

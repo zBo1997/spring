@@ -62,6 +62,12 @@ public class AspectJAroundAdvice extends AbstractAspectJAdvice implements Method
 		return true;
 	}
 
+	/**
+	 * Around比较复杂，
+	 * @param mi
+	 * @return
+	 * @throws Throwable
+	 */
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		if (!(mi instanceof ProxyMethodInvocation)) {

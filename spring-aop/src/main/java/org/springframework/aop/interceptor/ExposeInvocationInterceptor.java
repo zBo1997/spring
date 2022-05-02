@@ -92,8 +92,15 @@ public final class ExposeInvocationInterceptor implements MethodInterceptor, Pri
 	private ExposeInvocationInterceptor() {
 	}
 
+	/**
+	 * Aop拦截责责任链的核心 “ExposeInterceptor”
+	 * @param mi
+	 * @return
+	 * @throws Throwable
+	 */
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		//
 		MethodInvocation oldInvocation = invocation.get();
 		invocation.set(mi);
 		try {
