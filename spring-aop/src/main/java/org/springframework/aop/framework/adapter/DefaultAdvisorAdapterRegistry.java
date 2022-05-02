@@ -48,7 +48,20 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 
 
 	/**
-	 * 此方法把已有的advice实现的adapter加入进来
+	 * 此方法把已有的advice实现的adapter加入进来 方便后续匹配对应的MethodInterceptor
+	 *
+	 * 可是明明 总共有5哥Adapter 为什么只添加了 3个? 这是为什么？？？
+	 *
+	 *  因为要实现 {@link AdvisorAdapter} 这个接口要实现两个方法，具体去看这个类的。
+	 *
+	 *  这样做Spring是为了方便拓展，只要实现Adapter中的两个方法就可以了，给的是一个模板方法，
+	 *  本质上MethodBeforeAdvice 就是BeforeAdvice
+	 *  本质上MethodAfterAdvice 就是AfterAdvice
+	 *  本质上MethodThrowAdvice 也是是AfterAdvice（这里Spring细化出来了）,
+	 *  所以说Spring为了方便我们拓展，所以使用了适配器模式，按照接口的方式帮我们会把这几中MethodInterceptor
+	 *  按照Adapter()适配器的方式进行类型划分，让我门更好的拓展
+	 *
+	 *  @see DefaultAdvisorAdapterRegistry#getInterceptors
 	 *
 	 * Create a new DefaultAdvisorAdapterRegistry, registering well-known adapters.
 	 */
