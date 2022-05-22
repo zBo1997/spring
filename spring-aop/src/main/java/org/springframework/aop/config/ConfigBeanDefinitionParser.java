@@ -19,6 +19,8 @@ package org.springframework.aop.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -259,6 +261,8 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 						beanReferences.add(new RuntimeBeanReference(aspectName));
 					}
 					// 解析advice节点并注册到bean工厂中
+					// 注意这个'{@code order}', 这个参数 ，这个 参数是 xml解析节点的下标，
+					// Advice 的“拓普排序”回收到这个值的影响。
 					AbstractBeanDefinition advisorDefinition = parseAdvice(
 							aspectName, i, aspectElement, (Element) node, parserContext, beanDefinitions, beanReferences);
 					beanDefinitions.add(advisorDefinition);
@@ -340,7 +344,9 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	}
 
 	/**
-	 * 解析通知类并注册到bean工厂
+	 * 解析通知类并注册到bean工厂，注意这个'{@code order}', 这个参数 ，这个 参数是 xml解析节点的下标，
+	 * Advice 的“拓普排序”回收到这个值的影响。排序的放看这个方法
+	 * {@link AspectJAwareAdvisorAutoProxyCreator #sortAdvisors(List)}
 	 *
 	 * Parses one of '{@code before}', '{@code after}', '{@code after-returning}',
 	 * '{@code after-throwing}' or '{@code around}' and registers the resulting
