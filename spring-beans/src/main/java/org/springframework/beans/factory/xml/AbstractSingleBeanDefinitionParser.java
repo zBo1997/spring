@@ -65,7 +65,9 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 		if (parentName != null) {
 			builder.getRawBeanDefinition().setParentName(parentName);
 		}
-		// 获取自定义标签中的class，此时会调用自定义解析器
+		// 获取自定义标签中的class，此时会调用自定义解析器，通过这个设置Aop内的核心类型，
+		// 我理解这里是一个策略的设计模式 创建不同的Class 设置不同的类型
+		// 注意这里，Spring的事务在这里动态的设置了类型
 		Class<?> beanClass = getBeanClass(element);
 		if (beanClass != null) {
 			builder.getRawBeanDefinition().setBeanClass(beanClass);

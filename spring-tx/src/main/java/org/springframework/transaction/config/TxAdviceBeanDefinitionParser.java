@@ -73,8 +73,9 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+		//这里获取了transactionManager 进行了设置BeanDefinition
 		builder.addPropertyReference("transactionManager", TxNamespaceHandler.getTransactionManagerName(element));
-
+		// 获取<tx:attributes> 标签内的相关内容
 		List<Element> txAttributes = DomUtils.getChildElementsByTagName(element, ATTRIBUTES_ELEMENT);
 		if (txAttributes.size() > 1) {
 			parserContext.getReaderContext().error(
@@ -103,7 +104,7 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 			String name = methodEle.getAttribute(METHOD_NAME_ATTRIBUTE);
 			TypedStringValue nameHolder = new TypedStringValue(name);
 			nameHolder.setSource(parserContext.extractSource(methodEle));
-
+			//注意这里 设置相关设置熟悉值，传播特性，隔离级别...等等
 			RuleBasedTransactionAttribute attribute = new RuleBasedTransactionAttribute();
 			String propagation = methodEle.getAttribute(PROPAGATION_ATTRIBUTE);
 			String isolation = methodEle.getAttribute(ISOLATION_ATTRIBUTE);
@@ -123,6 +124,7 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 					parserContext.getReaderContext().error("Timeout must be an integer value: [" + timeout + "]", methodEle);
 				}
 			}
+			//是否为只读事务
 			if (StringUtils.hasText(readOnly)) {
 				attribute.setReadOnly(Boolean.parseBoolean(methodEle.getAttribute(READ_ONLY_ATTRIBUTE)));
 			}
@@ -140,7 +142,7 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 			transactionAttributeMap.put(nameHolder, attribute);
 		}
-
+		// NameMatchTransactionAttributeSource 注意这个类
 		RootBeanDefinition attributeSourceDefinition = new RootBeanDefinition(NameMatchTransactionAttributeSource.class);
 		attributeSourceDefinition.setSource(parserContext.extractSource(attrEle));
 		attributeSourceDefinition.getPropertyValues().add("nameMap", transactionAttributeMap);
