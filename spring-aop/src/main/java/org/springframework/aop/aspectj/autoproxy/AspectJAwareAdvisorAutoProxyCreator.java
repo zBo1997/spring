@@ -53,7 +53,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 
 	/**
-	 * 这里注意如果是使用xml的配置会根据xml的下标进行获取和帕排序，是会受到影响的
+	 * 这里注意如果是使用xml的配置会根据xml的下标进行获取拓扑排序，是会受到影响的
 	 * Sort the supplied {@link Advisor} instances according to AspectJ precedence.
 	 * <p>If two pieces of advice come from the same aspect, they will have the same
 	 * order. Advice from the same aspect is then further ordered according to the
