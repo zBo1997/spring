@@ -120,6 +120,9 @@ class ConfigurationClassEnhancer {
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(configSuperClass);
+		/**
+		 * 这里设置了一个增强的就接口，并且这个接口实现了{@link BeanFactoryAware}，所以呗增强的对象可以获取到当前的beanFactory
+		 */
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
@@ -284,10 +287,11 @@ class ConfigurationClassEnhancer {
 		public Object intercept(Object enhancedConfigInstance, Method beanMethod, Object[] beanMethodArgs,
 					MethodProxy cglibMethodProxy) throws Throwable {
 
+			// 实例获取beanFactory
 			ConfigurableBeanFactory beanFactory = getBeanFactory(enhancedConfigInstance);
+			// 获取bean名字
 			String beanName = BeanAnnotationHelper.determineBeanNameFor(beanMethod);
-
-			// Determine whether this bean is a scoped-proxy
+			//作用域
 			if (BeanAnnotationHelper.isScopedProxy(beanMethod)) {
 				String scopedBeanName = ScopedProxyCreator.getTargetBeanName(beanName);
 				if (beanFactory.isCurrentlyInCreation(scopedBeanName)) {
@@ -295,13 +299,7 @@ class ConfigurationClassEnhancer {
 				}
 			}
 
-			// To handle the case of an inter-bean method reference, we must explicitly check the
-			// container for already cached instances.
-
-			// First, check to see if the requested bean is a FactoryBean. If so, create a subclass
-			// proxy that intercepts calls to getObject() and returns any cached bean instance.
-			// This ensures that the semantics of calling a FactoryBean from within @Bean methods
-			// is the same as that of referring to a FactoryBean within XML. See SPR-6602.
+			// 判断返回的bean是不是factorybean，根据从beanfactory取&beanname,能取得就算factorybean
 			if (factoryContainsBean(beanFactory, BeanFactory.FACTORY_BEAN_PREFIX + beanName) &&
 					factoryContainsBean(beanFactory, beanName)) {
 				Object factoryBean = beanFactory.getBean(BeanFactory.FACTORY_BEAN_PREFIX + beanName);
@@ -309,15 +307,12 @@ class ConfigurationClassEnhancer {
 					// Scoped proxy factory beans are a special case and should not be further proxied
 				}
 				else {
-					// It is a candidate FactoryBean - go ahead with enhancement
+					// 又进行一层代理，因为factory的getobject方法又要new一个对象，这里只有再加一层代理从beanfactory获取，而不是新new违反单例
 					return enhanceFactoryBean(factoryBean, beanMethod.getReturnType(), beanFactory, beanName);
 				}
 			}
 
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
-				// The factory is calling the bean method in order to instantiate and register the bean
-				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
-				// create the bean instance.
 				if (logger.isInfoEnabled() &&
 						BeanFactoryPostProcessor.class.isAssignableFrom(beanMethod.getReturnType())) {
 					logger.info(String.format("@Bean method %s.%s is non-static and returns an object " +

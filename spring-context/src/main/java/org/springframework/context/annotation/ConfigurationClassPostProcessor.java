@@ -472,6 +472,24 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			return;
 		}
 
+		/**
+		 * 为什么Configuration注解被生成为代理对象，因为代理对象的？
+		 * cglib是通过继承来实现的，所以流程如下：
+		 *
+		 * 1.实例化Enhancer类
+		 * 1.1 enhancer.setSuperclass(configSuperClass);：设置被代理类appconfig为父类，则代理类继承appconfig
+		 * 1.2 enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class})：增强接口EnhancedConfiguration，
+		 * EnhancedConfiguration继承BeanFactoryAware接口，
+		 * 可以调用setBeanFactory方法（为什么要实现它的，原因在于：full模式下的都是单例，这个接口可以获取BeanFactory，
+		 * 通过它如果容器里有bean了，则直接从容器get）
+		 * 1.3 enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader))：设置BeanFactoryAwareGeneratorStrategy一个生成策略，
+		 * 生成cglib代理类，定义一个$$beanFactory类型用于存放环境中的beanfactory
+		 * 1.4 enhancer.setCallbackFilter(CALLBACK_FILTER)：设置2个过滤器BeanMethodInterceptor，BeanFactoryAwareMethodInterceptor。
+		 * 用于判断容器是否有bean，有就从容器获取返回，没得就new，保证bean的单例
+		 * 2.通过Enhancer创建代理类：Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader))
+		 * ————————————————
+		 * 原文链接：https://blog.csdn.net/qq_38425803/article/details/114117923
+		 */
 		ConfigurationClassEnhancer enhancer = new ConfigurationClassEnhancer();
 		for (Map.Entry<String, AbstractBeanDefinition> entry : configBeanDefs.entrySet()) {
 			AbstractBeanDefinition beanDef = entry.getValue();
