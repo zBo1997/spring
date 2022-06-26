@@ -1529,7 +1529,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
-	 * 针对desciptor所包装的对象类型是[stream,数组,Collection类型且对象类型是接口,Map]的情况，
+	 * 针对descriptor所包装的对象类型是[stream,数组,Collection类型且对象类型是接口,Map]的情况，
 	 * 进行解析与依赖类型匹配的候选Bean对象，
 	 * 并将其封装成相应的依赖类型对象
 	 * @param descriptor
