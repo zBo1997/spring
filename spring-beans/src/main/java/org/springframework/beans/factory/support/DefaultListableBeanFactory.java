@@ -1783,6 +1783,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				this, requiredType, true, descriptor.isEager());
 		// 定义用于保存匹配requiredType的bean名和其实例对象的Map，即匹配成功的候选Map
 		Map<String, Object> result = new LinkedHashMap<>(candidateNames.length);
+		/**
+		 * resolvableDependencies：这里来遍历这个集合，判断要注入的bean是否是该类型的
+		 * resolvableDependencies这个集合，默认有四个值
+		 * interface org.springframework.context.ApplicationContext" -> {AnnotationConfigApplicationContext@1641}
+		 * interface org.springframework.beans.factory.BeanFactory" -> {DefaultListableBeanFactory@1630}
+		 * interface org.springframework.core.io.ResourceLoader" -> {AnnotationConfigApplicationContext@1641}
+		 * interface org.springframework.context.ApplicationEventPublisher -> {AnnotationConfigApplicationContext@1641}
+		 */
 		// 从存放着手动显示注册的依赖项类型-相应的自动装配值的缓存中匹配候选
 		// 遍历从依赖项类型映射到相应的自动装配值缓存
 		for (Map.Entry<Class<?>, Object> classObjectEntry : this.resolvableDependencies.entrySet()) {
@@ -1804,6 +1812,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 		}
+		/**
+		 * 确切的说，是在isAutowireCandidate里面对Qualifier注解进行了判断
+		 * org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver#isAutowireCandidate(org.springframework.beans.factory.config.BeanDefinitionHolder, org.springframework.beans.factory.config.DependencyDescriptor)
+		 * 加@Qualifier注解，那这个方法都会返回true，然后将所有的实现类都返回
+		 * 如果加了@Qualifier注解，这里只有加了@Qualifier注解的实现类会返回TRUE，会被返回
+		 */
 		// 常规匹配候选
 		// 遍历candidateNames
 		for (String candidate : candidateNames) {
