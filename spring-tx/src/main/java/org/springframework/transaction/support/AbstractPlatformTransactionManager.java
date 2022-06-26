@@ -83,6 +83,7 @@ import org.springframework.transaction.UnexpectedRollbackException;
 public abstract class AbstractPlatformTransactionManager implements PlatformTransactionManager, Serializable {
 
 	/**
+	 * 保持事务是被“激活的”，即使是一个空事务
 	 * Always activate transaction synchronization, even for "empty" transactions
 	 * that result from PROPAGATION_SUPPORTS with no existing backend transaction.
 	 * @see org.springframework.transaction.TransactionDefinition#PROPAGATION_SUPPORTS
@@ -345,7 +346,10 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 		// 如果没有事务定义信息则使用默认的事务管理器定义信息
 		TransactionDefinition def = (definition != null ? definition : TransactionDefinition.withDefaults());
 
-		// 获取事务
+
+		/**
+		 * 正在开始获取事务的地方
+		 */
 		Object transaction = doGetTransaction();
 		boolean debugEnabled = logger.isDebugEnabled();
 
@@ -378,6 +382,9 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 				logger.debug("Creating new transaction with name [" + def.getName() + "]: " + def);
 			}
 			try {
+				/**
+				 * 开启事务 (也就是在这个时候获取了dataSource,进行了连接)
+				 */
 				return startTransaction(def, transaction, debugEnabled, suspendedResources);
 			}
 			catch (RuntimeException | Error ex) {
@@ -406,7 +413,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 
 		// 是否需要新同步
 		boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
-		// 创建新的事务
+		// 创建新的事务 (当前事务的状态)
 		DefaultTransactionStatus status = newTransactionStatus(
 				definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
 		// 开启事务和连接
@@ -551,6 +558,8 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 			boolean newSynchronization, boolean debug, @Nullable Object suspendedResources) {
 
 		// 是否需要新同步，只要有新同步且当前无同步激活事务
+		// 这里 isSynchronizationActive 判断了当前事务是否是是一个处于被激活的状态。
+		// 这里决定了后续的事务状态的是否需要同步事务
 		boolean actualNewSynchronization = newSynchronization &&
 				!TransactionSynchronizationManager.isSynchronizationActive();
 		return new DefaultTransactionStatus(

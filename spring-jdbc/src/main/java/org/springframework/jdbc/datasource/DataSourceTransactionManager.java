@@ -242,9 +242,10 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	@Override
 	protected Object doGetTransaction() {
-		// 创建一个数据源事务对象
+		// 创建一个数据源事务对象（这个对象里面有一些 事务 在获取连接时候的一些对象）
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
-		// 是否允许当前事务设置保持点
+		// 是否允许当前事务设置保持点 （注意这里 这里设置了是否可以 “进行嵌套事务”），
+		// 通过这个布尔值来判断是是否可设置，保存点
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
 		/**
 		 * TransactionSynchronizationManager 事务同步管理器对象(该类中都是局部线程变量)
@@ -283,12 +284,11 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		// 强制转化事务对象
 		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
 		Connection con = null;
-
 		try {
 			// 判断事务对象没有数据库连接持有器
 			if (!txObject.hasConnectionHolder() ||
 					txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
-				// 通过数据源获取一个数据库连接对象
+				// 通过数据源获取一个数据库连接对象 (开始获取数据源)
 				Connection newCon = obtainDataSource().getConnection();
 				if (logger.isDebugEnabled()) {
 					logger.debug("Acquired Connection [" + newCon + "] for JDBC transaction");
@@ -506,8 +506,14 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 
+		/**
+		 * 事务连接持有者
+		 */
 		private boolean newConnectionHolder;
 
+		/**
+		 * 是否必须自动提交
+		 */
 		private boolean mustRestoreAutoCommit;
 
 		public void setConnectionHolder(@Nullable ConnectionHolder connectionHolder, boolean newConnectionHolder) {

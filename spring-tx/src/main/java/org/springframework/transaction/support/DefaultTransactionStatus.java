@@ -96,7 +96,7 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 		this.transaction = transaction;
 		// 是都需要新事物
 		this.newTransaction = newTransaction;
-		// 是都需要新同步
+		// 是否都需要新同步
 		this.newSynchronization = newSynchronization;
 		// 是否只读
 		this.readOnly = readOnly;

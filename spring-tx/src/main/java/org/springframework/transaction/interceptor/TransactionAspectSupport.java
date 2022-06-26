@@ -580,7 +580,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 				}
 			};
 		}
-
+		// 设置当前事务的一个状态
 		TransactionStatus status = null;
 		if (txAttr != null) {
 			if (tm != null) {

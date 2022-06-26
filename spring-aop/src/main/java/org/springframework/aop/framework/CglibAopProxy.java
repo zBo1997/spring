@@ -676,7 +676,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
-	 * CgLib动态代理Interceptor责任链模式，中的一个
+	 * CgLib动态代理Interceptor责任链模式，中的一个。
+	 * 也是Spring通过Aop执行事务的入口。
 	 * General purpose AOP callback. Used when the target is dynamic or when the
 	 * proxy is not frozen.
 	 */
@@ -731,6 +732,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 				else {
 					// We need to create a method invocation...
 					// 通过cglibMethodInvocation来启动advice通知
+					// 注意这里这了proceed是正真开始进行处理
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);
