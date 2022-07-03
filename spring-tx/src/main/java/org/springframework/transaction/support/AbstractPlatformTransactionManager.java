@@ -377,6 +377,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 				def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW ||
 				def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED) {
 			//没有当前事务的话，REQUIRED，REQUIRES_NEW，NESTED挂起的是空事务，然后创建一个新事务
+			//事务挂起的地方
 			SuspendedResourcesHolder suspendedResources = suspend(null);
 			if (debugEnabled) {
 				logger.debug("Creating new transaction with name [" + def.getName() + "]: " + def);
@@ -417,6 +418,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 		DefaultTransactionStatus status = newTransactionStatus(
 				definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
 		// 开启事务和连接
+		// 实际开启事务的地方（在这里获取连接）
 		doBegin(transaction, definition);
 		// 新同步事务的设置，针对于当前线程的设置
 		prepareSynchronization(status, definition);

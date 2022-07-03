@@ -33,6 +33,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 管理每个线程的资源和事务同步的中央委托。
  * Central delegate that manages resources and transaction synchronizations per thread.
  * To be used by resource management code but not by typical application code.
  *
@@ -80,6 +81,7 @@ public abstract class TransactionSynchronizationManager {
 
 	// 线程私有事务资源
 	// 保证每个线程都是单独的数据源
+	// 这样也可以保证在同1个方法中的事务嵌套时候使用的是相同的connectionHolder
 	private static final ThreadLocal<Map<Object, Object>> resources =
 			new NamedThreadLocal<>("Transactional resources");
 
@@ -143,8 +145,9 @@ public abstract class TransactionSynchronizationManager {
 	 */
 	@Nullable
 	public static Object getResource(Object key) {
-		// 对DataSource 取消包装
+		//这里取消的dataSource的基础包装
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
+		//获取dataSource
 		Object value = doGetResource(actualKey);
 		if (value != null && logger.isTraceEnabled()) {
 			logger.trace("Retrieved value [" + value + "] for key [" + actualKey + "] bound to thread [" +
@@ -155,6 +158,7 @@ public abstract class TransactionSynchronizationManager {
 
 	/**
 	 * Actually check the value of the resource that is bound for the given key.
+	 * 第一次获取datSource 肯定是空的dataSource,因为这个 "resources" 是一个线程级别的ThreadLocal
 	 */
 	@Nullable
 	private static Object doGetResource(Object actualKey) {

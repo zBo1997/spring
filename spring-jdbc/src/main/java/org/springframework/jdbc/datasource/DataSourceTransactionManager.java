@@ -120,6 +120,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 
 	/**
+	 * 在创建dataSource的时候就默认设置为可以嵌套事务了
 	 * Create a new DataSourceTransactionManager instance.
 	 * A DataSource has to be set to be able to use it.
 	 * @see #setDataSource
@@ -319,6 +320,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 					logger.debug("Switching JDBC Connection [" + con + "] to manual commit");
 				}
 				// 关闭自动提交
+				// 把事务和回滚和提交交给spring的TransactionManager
 				con.setAutoCommit(false);
 			}
 
@@ -507,12 +509,12 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 
 		/**
-		 * 事务连接持有者
+		 * 是否新的持久连接
 		 */
 		private boolean newConnectionHolder;
 
 		/**
-		 * 是否必须自动提交
+		 * 是否自动提交
 		 */
 		private boolean mustRestoreAutoCommit;
 
