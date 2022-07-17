@@ -1092,6 +1092,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				@Override
 				public void run() {
 					synchronized (startupShutdownMonitor) {
+						/**
+						 * 1、包括固销毁bean信息
+						 * 2、关闭bean工厂
+						 * 3、还可通过onClose Spring给我们提供的模板方法进行自定以的处理容器关闭后的相关操作
+						 */
 						doClose();
 					}
 				}
