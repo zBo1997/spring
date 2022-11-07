@@ -291,6 +291,7 @@ public class ContextLoader {
 						ApplicationContext parent = loadParentContext(servletContext);
 						cwac.setParent(parent);
 					}
+					//这里是是开始启动父容器，也就是Spring中refresh()方法
 					configureAndRefreshWebApplicationContext(cwac, servletContext);
 				}
 			}

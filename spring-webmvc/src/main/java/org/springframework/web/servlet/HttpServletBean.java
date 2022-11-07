@@ -156,7 +156,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	 */
 	@Override
 	public final void init() throws ServletException {
-
+		// 初始化Servlet 也就是 DispatcherServlet 的核心
 		// Set bean properties from init parameters.
 		// 将servlet中配置的init-param参数封装到pvs变量中
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
