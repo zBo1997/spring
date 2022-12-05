@@ -587,6 +587,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating instance of bean '" + beanName + "'");
 		}
+		// 这里做了很细的操作 注意这个mbdToUse
 		RootBeanDefinition mbdToUse = mbd;
 
 		// Make sure bean class is actually resolved at this point, and
@@ -723,8 +724,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 
 			////只保留二级缓存，不向三级缓存中存放对象
-			//earlySingletonObjects.put(beanName,bean);
-			//registeredSingletons.add(beanName);
+			earlySingletonObjects.put(beanName,bean);
+			registeredSingletons.add(beanName);
 
 
 			synchronized (this.singletonObjects) {

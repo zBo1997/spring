@@ -518,7 +518,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		proxyFactory.addAdvisors(advisors);
 		// 设置到要代理的类
 		proxyFactory.setTargetSource(targetSource);
-		// 定制代理
+		// 定制代理（这里似乎是一个模板方法）
 		customizeProxyFactory(proxyFactory);
 
 		// 控制代理工程被配置之后，是否还允许修改通知，默认值是false
