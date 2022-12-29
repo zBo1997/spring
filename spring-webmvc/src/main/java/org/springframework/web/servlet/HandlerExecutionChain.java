@@ -168,7 +168,8 @@ public class HandlerExecutionChain {
 				HandlerInterceptor interceptor = interceptors[i];
 				// 前置处理
 				if (!interceptor.preHandle(request, response, this.handler)) {
-					// 已完成处理拦截器
+					// 已完成处理拦截器(这里会执行上一个interceptor 的AfterCompletion
+					// 方法 因为 interceptorIndex 是保留上一个的下标)
 					triggerAfterCompletion(request, response, null);
 					// 返回false，前置处理失败
 					return false;

@@ -556,8 +556,10 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
-	 * 此处同学们需要知道一个原理，所有的前后端交互的框架都是以servlet为基础的，所以在使用springmvc的时候，默认会把自己的容器设置成ServletContext
-	 * 的属性，默认根容器的key为WebApplicaitonContext.Root,定义在WebApplicationContext中，所以在获取的时候只需要调用ServletContext.getAttribute即可
+	 * 此处同学们需要知道一个原理，所有的前后端交互的框架都是以servlet为基础的，所以在使用springmvc的时候，
+	 * 默认会把自己的容器设置成ServletContext
+	 * 的属性，默认根容器的key为WebApplicaitonContext.Root,定义在WebApplicationContext中，
+	 * 所以在获取的时候只需要调用ServletContext.getAttribute即可
 	 *
 	 *
 	 * Initialize and publish the WebApplicationContext for this servlet.

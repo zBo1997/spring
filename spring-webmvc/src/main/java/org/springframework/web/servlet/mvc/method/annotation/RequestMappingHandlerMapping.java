@@ -66,7 +66,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
  * {@link org.springframework.web.accept.ContentNegotiationManagerFactoryBean
  * ContentNegotiationManagerFactoryBean}). For further context, please read issue
  * <a href="https://github.com/spring-projects/spring-framework/issues/24179">#24719</a>.
- *
+ * 此类是真正 dispatch 分发出来的对应的handlerMapping 使用此类就执行了对应的Mapping
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Sam Brannen

@@ -205,7 +205,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	}
 
 
-	// Handler method detection
+	// Handler method detection (定义handler的地方)
 
 	/**
 	 * Detects handler methods at initialization.
